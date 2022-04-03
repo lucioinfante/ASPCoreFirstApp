@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ASPCoreFirstApp.Models.ButtonModel>
+<style>
+    .game-button {
+        width: 74px;
+    }
+
+    .game-button-image {
+        width: 70%;
+    }
+
+    .button-zone {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .line-break {
+        flex-basis: 100%;
+        height: 0;
+    }
+
+    .button-label {
+        font-size: 8px;
+        text-align: center;
+    }
+</style>
+@{
+    // store image names in an array for more efficient code.
+    string[] imageNames = { "blue-button.png", "green-button.png", "purple-button.png", "red-button.png" };
+    bool allMatch = true;
+}
+<p>Current Time: @DateTime.Now</p>
+<form>
+    <div class="button-zone">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            @if (Model.ElementAt(0).ButtonState != Model.ElementAt(1).ButtonState)
+            {
+                allMatch = false;
+            }
+            // start a new 1ine every five elements.
+            @if (i % 5 == 0)
+            {
+                <div class="line-break"></div>
+            }
+            <div class="oneButton" id="@i">
+                <button class="game-button" type="submit" value="@Model.ElementAt(i).Id" name="buttonNumber" asp-controller="Button" asp-action="HandleButtonClick">
+                    <img class="game-button-image" src="/img/@imageNames[Model.ElementAt(i).ButtonState]" />
+                    <div class="button-label">
+                        @Model.ElementAt(i).Id
+                        ,
+                        @Model.ElementAt(i).ButtonState
+                    </div>
+                </button>
+            </div>
+        }
+    </div>
+</form>
+
+@if (allMatch)
+{
+    <p>Congratulations. All buttons match</p>
+}
+else
+{
+    <p>Try to make the buttoms match</p>
+}
+
